@@ -1,0 +1,82 @@
+//1-Consultar información básica de una cuenta
+SELECT CreatedDate, Name, Phone, Type FROM Account
+
+//2-Consulta con filtros básicos
+SELECT AccountId, Email, Id, LastName FROM Contact WHERE Email LIKE '%.net%'
+
+//3-Consulta anterior ordenada alfabeticamente
+SELECT AccountId,Email,Id,LastName FROM Contact
+  WHERE Email LIKE '%.net%' ORDER BY LastName ASC NULLS FIRST
+
+//4-Consulta de objeto secundario a principal
+SELECT FirstName, LastName, Account.Name FROM Contact
+
+//Consulta SQL equivalente a la anterior
+
+    SELECT c.FirstName, c.LastName, a.Name FROM Account a
+    RIGHT JOIN Contact c ON (c.AccountId = a.Id)
+    
+//5-Consulta de objeto principal a secundario
+SELECT Name, (Select FirstName, LastName FROM Contacts) FROM Account
+
+//Consulta SQL equivalente a la anterior
+    SELECT a.Name, c.FirstName, c.LastName
+    FROM Account a
+    LEFT JOIN Contact c ON (a.Id = c.AccountId)
+
+//6-Consulta # de registros en un objeto 
+SELECT COUNT() FROM Account
+
+//7- Consulta # de filas donde el campo aparece
+SELECT COUNT(Id) FROM Account
+
+
+//8- Insertar datos
+
+// Agregar cuenta
+Account acct = new Account(
+    Name='Test Account',
+    Phone='(225)555-8989',
+    NumberOfEmployees=10,
+    BillingCity='Baton Rouge');
+insert acct;
+
+
+//9-Crear una cuenta con el parámetro allOrNone 
+establecido en false y devolver la información de
+operación correcta o fallida en una tabla
+
+// Agregar cuenta
+Account acct = new Account(
+    Name='Test Account',
+    Phone='(225)555-8989',
+    NumberOfEmployees=10,
+    BillingCity='Baton Rouge');
+Database.SaveResult[] results = Database.insert(acct, false);
+
+
+
+**************************************************
+EXCEPCIONES DE SELECTIVIDAD DE ÍNDICES
+**************************************************
+
+//1-Consultas de filas nulas: Las consultas que buscan registros en los que el campo está vacío o es nulo
+
+SELECT Id, Name FROM Account WHERE Custom_Field__c = null
+
+
+//2-Operadores de filtro negativos: El uso de operadores como !=, NOT LIKE o EXCLUDES en sus consultas. 
+
+SELECT CaseNumber FROM Case WHERE Status != ‘New’
+
+
+//3-Comodines iniciales: Las consultas que utilizan un comodín inicial
+
+SELECT Id, LastName, FirstName FROM Contact WHERE LastName LIKE ‘%smi%’
+
+
+//4-Campos de texto con operadores de comparación: El uso de operadores de comparación, como >, <, >=, o <=, con campos basados en texto
+
+SELECT AccountId, Amount FROM Opportunity WHERE Order_Number__c > 10
+
+
