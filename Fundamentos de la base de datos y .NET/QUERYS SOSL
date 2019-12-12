@@ -1,0 +1,5 @@
+//1- Consulta básica buscar campos con base a parametro
+FIND ‘grand*’ IN ALL FIELDS RETURNING Account(Name), Contact(LastName, FirstName, Email)
+
+//2- Consulta básica en Query Console
+FIND {joey} IN ALL FIELDS RETURNING Account(Name), Contact(LastName, FirstName), Document(Name)
